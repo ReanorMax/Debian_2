@@ -1,0 +1,797 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Руководство по конфигурированию КСУ на DEBIAN</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="description" content="Полное руководство по установке и настройке Debian с шифрованием, RAID, EFI, PostgreSQL, MySQL, Nginx и другими сервисами">
+    <meta name="keywords" content="Debian, Linux, установка, настройка, RAID, EFI, шифрование, PostgreSQL, MySQL, Nginx, Zabbix, Asterisk">
+    
+    <!-- Добавляем поддержку JSONP для загрузки из внешних источников -->
+    <script type="text/javascript">
+        // Функция обработчик для JSONP
+        function handleExternalData(data) {
+            if (window.commandAPI) {
+                if (data.commands) {
+                    data.commands.forEach(cmd => window.commandAPI.commands.add(cmd));
+                }
+                if (data.blocks) {
+                    data.blocks.forEach(block => window.commandAPI.blocks.add(block));
+                }
+                if (data.software) {
+                    data.software.forEach(sw => window.commandAPI.software.add(sw));
+                }
+                console.log('Внешние данные успешно загружены');
+            } else {
+                console.error('API не инициализирован. Дождитесь полной загрузки страницы.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <nav>
+        <div class="nav-logo">
+            <i class="fa-brands fa-debian" style="font-size: 2.5rem; color: var(--primary-color);"></i>
+        </div>
+        <div class="container">
+            <ul id="nav-menu">
+                <!-- Навигационные пункты будут добавлены через JavaScript -->
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <h1><i class="fa-brands fa-debian"></i> Руководство по конфигурированию КСУ на DEBIAN</h1>
+            <p>Полное руководство по установке и настройке Debian с шифрованием</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="content">
+            <section id="intro">
+                <div class="section-header-banner">
+                    <i class="fa-solid fa-home"></i>
+                    <span>Введение в руководство</span>
+                </div>
+                
+                <h2>Установка Debian с шифрованием</h2>
+                <p>Это руководство поможет вам установить и настроить Debian с шифрованием диска. 
+                Следуйте инструкциям для безопасной установки и конфигурации вашей системы.</p>
+                
+                <div class="info-box">
+                    <i class="fa-solid fa-circle-info info-icon"></i>
+                    <div>
+                        <h4>Важно знать перед началом</h4>
+                        <p>Это руководство предполагает, что вы имеете базовые знания Linux и понимаете потенциальные риски при выполнении системных команд. Всегда создавайте резервные копии важных данных перед внесением изменений в систему.</p>
+                    </div>
+                </div>
+                
+                <div class="success-box">
+                    <i class="fa-solid fa-check-circle success-icon"></i>
+                    <div>
+                        <h4>Преимущества этого руководства</h4>
+                        <p>Вы получите полностью настроенную систему Debian с:</p>
+                        <ul>
+                            <li>Шифрованием диска для защиты данных</li>
+                            <li>Отказоустойчивым RAID-массивом для надежности</li>
+                            <li>Настроенными веб-серверами и базами данных</li>
+                            <li>Полной документацией по всем командам и процессам</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <div id="commands-container">
+                <!-- Блоки команд будут добавлены через JavaScript -->
+            </div>
+
+            <!-- Новый раздел для справочника команд -->
+            <section id="command-reference" class="command-reference-section">
+                <h2><i class="fa-solid fa-book-open"></i> Справочник команд</h2>
+                <p>В этом разделе собраны все используемые команды с подробным объяснением их назначения и принципов работы. Используйте этот справочник для более глубокого понимания выполняемых операций.</p>
+                
+                <div class="search-container">
+                    <input type="text" id="command-search" placeholder="Поиск команды..." class="search-input">
+                    <button id="search-button" class="search-button"><i class="fa-solid fa-search"></i></button>
+                </div>
+                
+                <div class="command-filters">
+                    <button class="filter-btn active" data-filter="all">Все команды</button>
+                    <button class="filter-btn" data-filter="system">Системные</button>
+                    <button class="filter-btn" data-filter="network">Сетевые</button>
+                    <button class="filter-btn" data-filter="storage">Хранение</button>
+                    <button class="filter-btn" data-filter="package">Управление пакетами</button>
+                    <button class="filter-btn" data-filter="service">Службы</button>
+                </div>
+                
+                <div id="command-list" class="command-list">
+                    <!-- Список команд будет добавен через JavaScript -->
+                </div>
+            </section>
+
+            <section id="software-versions" class="software-versions-section">
+                <h2><i class="fa-solid fa-code-branch"></i> Используемое программное обеспечение</h2>
+                
+                <div class="version-categories">
+                    <button class="category-btn active" data-category="all">Все</button>
+                    <button class="category-btn" data-category="base">Базовая система</button>
+                    <button class="category-btn" data-category="web">Веб-сервер</button>
+                    <button class="category-btn" data-category="programming">Языки программирования</button>
+                    <button class="category-btn" data-category="database">Базы данных</button>
+                    <button class="category-btn" data-category="storage">Хранение</button>
+                    <button class="category-btn" data-category="backup">Резервное копирование</button>
+                </div>
+
+                <div id="software-list" class="software-list">
+                    <!-- Список ПО будет добавен через JavaScript -->
+                </div>
+            </section>
+            
+            <!-- Добавляем новый раздел с часто задаваемыми вопросами -->
+            <section id="faq-section">
+                <div class="section-header-banner" style="background: linear-gradient(135deg, #4f46e5, #3b82f6);">
+                    <i class="fa-solid fa-question-circle"></i>
+                    <span>Часто задаваемые вопросы</span>
+                </div>
+                
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fa-solid fa-caret-right"></i>
+                            <h3>Какие требования к системе для установки?</h3>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Минимальные требования для комфортной работы:</p>
+                            <ul>
+                                <li>Процессор: 2 ядра</li>
+                                <li>Оперативная память: 2 ГБ (рекомендуется 4 ГБ или больше)</li>
+                                <li>Место на диске: 20 ГБ (рекомендуется 50 ГБ или больше)</li>
+                                <li>Желательно наличие двух дисков для настройки RAID</li>
+                                <li>Поддержка UEFI для настройки EFI загрузчика</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fa-solid fa-caret-right"></i>
+                            <h3>Что делать, если команда завершилась с ошибкой?</h3>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Если команда завершилась с ошибкой, следуйте этим шагам:</p>
+                            <ol>
+                                <li>Внимательно прочитайте сообщение об ошибке</li>
+                                <li>Проверьте правильность введенных команд</li>
+                                <li>Убедитесь, что все зависимости установлены</li>
+                                <li>Проверьте наличие прав администратора (sudo) для выполнения команд</li>
+                                <li>В случае проблем с RAID или EFI, убедитесь, что указаны правильные устройства</li>
+                            </ol>
+                            <p>Если проблема не решается, рекомендуется восстановиться из предыдущей точки Timeshift.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fa-solid fa-caret-right"></i>
+                            <h3>Как обновить систему после установки?</h3>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Для регулярного обновления системы используйте следующие команды:</p>
+                            <div class="terminal">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <div class="dot dot-red"></div>
+                                        <div class="dot dot-yellow"></div>
+                                        <div class="dot dot-green"></div>
+                                    </div>
+                                    <div class="terminal-title">Terminal</div>
+                                </div>
+                                <div class="terminal-content">
+                                    <div><span class="terminal-prompt">$</span><span class="terminal-command">sudo apt update</span></div>
+                                    <div><span class="terminal-prompt">$</span><span class="terminal-command">sudo apt upgrade -y</span></div>
+                                    <div><span class="terminal-prompt">$</span><span class="terminal-command">sudo apt dist-upgrade -y</span></div>
+                                    <div><span class="terminal-prompt">$</span><span class="terminal-command">sudo apt autoremove -y</span></div>
+                                </div>
+                                <button class="copy-btn" data-commands="sudo apt update
+sudo apt upgrade -y
+sudo apt dist-upgrade -y
+sudo apt autoremove -y"><i class="fa-regular fa-clipboard"></i></button>
+                            </div>
+                            <p>Рекомендуется создавать точку восстановления Timeshift перед обновлением системы.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fa-solid fa-caret-right"></i>
+                            <h3>Как настроить автоматические обновления?</h3>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Для настройки автоматических обновлений в Debian:</p>
+                            <ol>
+                                <li>Установите пакет unattended-upgrades: <code>sudo apt install unattended-upgrades apt-listchanges</code></li>
+                                <li>Настройте параметры обновления: <code>sudo dpkg-reconfigure -plow unattended-upgrades</code></li>
+                                <li>Отредактируйте файл конфигурации: <code>/etc/apt/apt.conf.d/50unattended-upgrades</code></li>
+                            </ol>
+                            <p>Для обновления только пакетов безопасности оставьте раскомментированной только строку:</p>
+                            <pre>Unattended-Upgrade::Origins-Pattern {
+    "origin=Debian,codename=${distro_codename},label=Debian-Security";
+};</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <i class="fa-solid fa-caret-right"></i>
+                            <h3>Как выполнять резервное копирование базы данных?</h3>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Для PostgreSQL:</p>
+                            <div class="terminal">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <div class="dot dot-red"></div>
+                                        <div class="dot dot-yellow"></div>
+                                        <div class="dot dot-green"></div>
+                                    </div>
+                                    <div class="terminal-title">Terminal</div>
+                                </div>
+                                <div class="terminal-content">
+                                    <div><span class="terminal-prompt">$</span><span class="terminal-command">pg_dump -U username -d database_name > backup.sql</span></div>
+                                </div>
+                                <button class="copy-btn" data-commands="pg_dump -U username -d database_name > backup.sql"><i class="fa-regular fa-clipboard"></i></button>
+                            </div>
+                            
+                            <p>Для MySQL/MariaDB:</p>
+                            <div class="terminal">
+                                <div class="terminal-header">
+                                    <div class="terminal-dots">
+                                        <div class="dot dot-red"></div>
+                                        <div class="dot dot-yellow"></div>
+                                        <div class="dot dot-green"></div>
+                                    </div>
+                                    <div class="terminal-title">Terminal</div>
+                                </div>
+                                <div class="terminal-content">
+                                    <div><span class="terminal-prompt">$</span><span class="terminal-command">mysqldump -u username -p database_name > backup.sql</span></div>
+                                </div>
+                                <button class="copy-btn" data-commands="mysqldump -u username -p database_name > backup.sql"><i class="fa-regular fa-clipboard"></i></button>
+                            </div>
+                            
+                            <p>Для автоматизации резервного копирования рекомендуется создать скрипт и настроить его запуск через cron.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Adding new System Architecture Diagram section -->
+            <section id="system-architecture" class="architecture-section">
+                <div class="section-header-banner" style="background: linear-gradient(135deg, #4338ca, #3b82f6);">
+                    <i class="fa-solid fa-sitemap"></i>
+                    <span>Веб архитектура</span>
+                </div>
+                
+                <p class="architecture-intro">Схема архитектуры системы, которая наглядно показывает взаимодействие всех компонентов, настроенных согласно руководству.</p>
+                
+                <div class="architecture-container">
+                    <div id="system-diagram"></div>
+                    <div class="diagram-legend">
+                        <div class="legend-item"><span class="legend-color" style="background-color: #4f46e5;"></span> Системные компоненты</div>
+                        <div class="legend-item"><span class="legend-color" style="background-color: #10b981;"></span> Сервисы веб-сервера</div>
+                        <div class="legend-item"><span class="legend-color" style="background-color: #f59e0b;"></span> Базы данных</div>
+                        <div class="legend-item"><span class="legend-color" style="background-color: #ef4444;"></span> Средства безопасности</div>
+                        <div class="legend-item"><span class="legend-color" style="background-color: #8b5cf6;"></span> Хранение данных</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Adding new File System Structure section -->
+            <section id="filesystem-structure" class="filesystem-structure-section">
+                <div class="section-header-banner" style="background: linear-gradient(135deg, #6b21a8, #8b5cf6);">
+                    <i class="fa-solid fa-hard-drive"></i>
+                    <span>Структура дисков и файловой системы</span>
+                </div>
+                
+                <p class="filesystem-intro">Подробная структура дисков, разделов и файловой системы устанавливаемой конфигурации Debian. Эта схема поможет понять организацию данных и конфигурационных файлов.</p>
+                
+                <div class="filesystem-container" id="filesystem-container">
+                    <!-- Content will be generated by JavaScript -->
+                </div>
+            </section>
+            
+            <section id="resources-section">
+                <div class="section-header-banner" style="background: linear-gradient(135deg, #0891b2, #06b6d4);">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Полезные ресурсы</span>
+                </div>
+                
+                <div class="resources-container">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <div class="resource-content">
+                            <h3>Официальная документация</h3>
+                            <p>Полная документация Debian с подробными инструкциями по установке и настройке.</p>
+                            <a href="https://www.debian.org/doc/" target="_blank" class="resource-link">
+                                <i class="fa-solid fa-external-link-alt"></i> Открыть документацию
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="resource-content">
+                            <h3>Сообщество Debian</h3>
+                            <p>Форумы и чаты для решения проблем и обмена опытом с другими пользователями.</p>
+                            <a href="https://www.debian.org/support" target="_blank" class="resource-link">
+                                <i class="fa-solid fa-external-link-alt"></i> Найти поддержку
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fa-solid fa-shield-alt"></i>
+                        </div>
+                        <div class="resource-content">
+                            <h3>Обновления безопасности</h3>
+                            <p>Важные обновления безопасности и патчи для Debian.</p>
+                            <a href="https://www.debian.org/security/" target="_blank" class="resource-link">
+                                <i class="fa-solid fa-external-link-alt"></i> Проверить обновления
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <div class="resource-content">
+                            <h3>Контрольный список безопасности сервера</h3>
+                            <p>Проверочный список для обеспечения безопасности вашего сервера Debian.</p>
+                            <a href="#" class="resource-link" id="show-checklist">
+                                <i class="fa-solid fa-list-check"></i> Открыть список
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="right-nav">
+        <div class="right-nav-title">
+            <span>Важные разделы</span>
+        </div>
+        <ul>
+            <li><a href="#intro"><i class="fa-solid fa-home"></i><span>Введение в руководство</span></a></li>
+            <li><a href="#command-reference"><i class="fa-solid fa-book"></i><span>Справочник команд</span></a></li>
+            <li><a href="#software-versions"><i class="fa-solid fa-code-branch"></i><span>Версии ПО</span></a></li>
+            <li><a href="#logs-data-info"><i class="fa-solid fa-folder-tree"></i><span>Файлы и логи</span></a></li>
+            <li><a href="#system-architecture"><i class="fa-solid fa-sitemap"></i><span>Веб архитектура</span></a></li>
+            <li><a href="#filesystem-structure"><i class="fa-solid fa-hard-drive"></i><span>Структура файловой системы</span></a></li>
+            <li><a href="#faq-section"><i class="fa-solid fa-question-circle"></i><span>Часто задаваемые вопросы</span></a></li>
+            <li><a href="#resources-section"><i class="fa-solid fa-link"></i><span>Полезные ресурсы</span></a></li>
+        </ul>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Сфера телеком. Руководство по конфигурированию КСУ на DEBIAN. Все права защищены.</p>
+            <div class="footer-links">
+                <a href="#intro">Главная</a>
+                <a href="#command-reference">Справочник команд</a>
+                <a href="#software-versions">Версии ПО</a>
+                <a href="#logs-data-info">Файлы и логи</a>
+                <a href="#faq-section">Вопросы и ответы</a>
+                <a href="#resources-section">Полезные ресурсы</a>
+            </div>
+            <div class="contact-info">
+                <p>Техническая поддержка: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c0b3b5b0b0afb2b480b3b0a8a5b2a1edb4a5aca5a3afadeeb2b5">[email&#160;protected]</a></strong></p>
+                <p>Тел: <strong>+7 (XXX) XXX-XX-XX</strong></p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="notification" class="notification hidden">
+        <p><i class="fa-solid fa-check-circle"></i> Команда скопирована в буфер обмена!</p>
+    </div>
+
+    <!-- Добавляем скрытый раздел для управления контентом (можно открыть из консоли) -->
+    <div id="admin-panel" style="display:none;">
+        <h2>Панель управления контентом</h2>
+        
+        <div class="admin-section">
+            <h3>Добавить новый блок команд</h3>
+            <form id="add-block-form">
+                <div class="form-group">
+                    <label for="block-id">ID блока:</label>
+                    <input type="text" id="block-id" required>
+                </div>
+                <div class="form-group">
+                    <label for="block-title">Заголовок:</label>
+                    <input type="text" id="block-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="block-icon">Иконка (Font Awesome):</label>
+                    <input type="text" id="block-icon" placeholder="fa-solid fa-..." required>
+                </div>
+                <div class="form-group">
+                    <label for="block-category">Категория:</label>
+                    <select id="block-category">
+                        <option value="system-setup">Настройка системы</option>
+                        <option value="storage">Управление хранилищем</option>
+                        <option value="server-setup">Настройка серверов</option>
+                        <option value="database">Базы данных</option>
+                        <option value="security">Безопасность</option>
+                        <option value="utilities">Утилиты</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="block-description">Описание:</label>
+                    <textarea id="block-description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="block-notes">Примечания:</label>
+                    <textarea id="block-notes"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="block-warnings">Предупреждения:</label>
+                    <textarea id="block-warnings"></textarea>
+                </div>
+                <button type="submit">Добавить блок</button>
+            </form>
+        </div>
+        
+        <div class="admin-section">
+            <h3>Добавить новую команду в справочник</h3>
+            <form id="add-command-form">
+                <div class="form-group">
+                    <label for="command-name">Команда:</label>
+                    <input type="text" id="command-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="command-syntax">Синтаксис:</label>
+                    <input type="text" id="command-syntax" required>
+                </div>
+                <div class="form-group">
+                    <label for="command-description">Описание:</label>
+                    <textarea id="command-description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="command-usage">Использование:</label>
+                    <textarea id="command-usage"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="command-category">Категория:</label>
+                    <select id="command-category">
+                        <option value="system">Системные</option>
+                        <option value="network">Сетевые</option>
+                        <option value="storage">Хранение</option>
+                        <option value="package">Управление пакетами</option>
+                        <option value="service">Службы</option>
+                    </select>
+                </div>
+                <button type="submit">Добавить команду</button>
+            </form>
+        </div>
+        
+        <div class="admin-section">
+            <h3>Загрузить данные из внешнего JSON</h3>
+            <div class="form-group">
+                <label for="external-url">URL JSON файла:</label>
+                <input type="text" id="external-url" placeholder="https://example.com/commands.json">
+            </div>
+            <button id="load-external">Загрузить</button>
+        </div>
+        
+        <!-- New filesystem management section -->
+        <div class="admin-section">
+            <h3>Управление файловой системой</h3>
+            <div role="tablist" class="filesystem-tabs">
+                <button role="tab" class="tab-btn active" data-tab="mount-points">Точки монтирования</button>
+                <button role="tab" class="tab-btn" data-tab="disks">Диски</button>
+            </div>
+            
+            <div class="tab-content active" data-tab="mount-points">
+                <h4>Добавить точку монтирования</h4>
+                <form id="add-mount-form">
+                    <div class="form-group">
+                        <label for="mount-path">Путь:</label>
+                        <input type="text" id="mount-path" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mount-device">Устройство:</label>
+                        <input type="text" id="mount-device" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mount-fstype">Тип файловой системы:</label>
+                        <input type="text" id="mount-fstype" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mount-options">Опции монтирования:</label>
+                        <input type="text" id="mount-options" value="defaults">
+                    </div>
+                    <div class="form-group">
+                        <label for="mount-category">Категория:</label>
+                        <select id="mount-category">
+                            <option value="system">Система</option>
+                            <option value="data" selected>Данные</option>
+                            <option value="logs">Логи</option>
+                        </select>
+                    </div>
+                    <button type="submit">Добавить точку монтирования</button>
+                </form>
+            </div>
+            
+            <div class="tab-content" data-tab="disks">
+                <h4>Добавить диск</h4>
+                <form id="add-disk-form">
+                    <div class="form-group">
+                        <label for="disk-name">Название диска:</label>
+                        <input type="text" id="disk-name" required placeholder="Диск 4 (sde)">
+                    </div>
+                    <div class="form-group">
+                        <label for="disk-size">Размер:</label>
+                        <input type="text" id="disk-size" required placeholder="500G">
+                    </div>
+                    <div class="form-group">
+                        <label for="disk-partitions">Разделы (JSON):</label>
+                        <textarea id="disk-partitions" rows="4" placeholder='[{"name":"sde1","type":"Linux system","size":"500G","raid":"md5 (RAID1)","fs":"ext4","mount":"/data"}]'></textarea>
+                    </div>
+                    <button type="submit">Добавить диск</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Инициализация форм управления контентом
+        document.addEventListener('DOMContentLoaded', function() {
+            // Форма добавления нового блока
+            const addBlockForm = document.getElementById('add-block-form');
+            if (addBlockForm) {
+                addBlockForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (window.commandAPI) {
+                        const newBlock = {
+                            id: document.getElementById('block-id').value,
+                            title: document.getElementById('block-title').value,
+                            icon: document.getElementById('block-icon').value,
+                            category: document.getElementById('block-category').value,
+                            description: document.getElementById('block-description').value,
+                            notes: document.getElementById('block-notes').value,
+                            warnings: document.getElementById('block-warnings').value,
+                            steps: [] // Шаги нужно добавлять отдельно для большей детализации
+                        };
+                        
+                        window.commandAPI.blocks.add(newBlock);
+                        alert('Блок успешно добавлен!');
+                        this.reset();
+                    } else {
+                        alert('API не инициализирован. Дождитесь полной загрузки страницы.');
+                    }
+                });
+            }
+            
+            // Форма добавления новой команды
+            const addCommandForm = document.getElementById('add-command-form');
+            if (addCommandForm) {
+                addCommandForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (window.commandAPI) {
+                        const newCommand = {
+                            command: document.getElementById('command-name').value,
+                            syntax: document.getElementById('command-syntax').value,
+                            description: document.getElementById('command-description').value,
+                            usage: document.getElementById('command-usage').value,
+                            category: document.getElementById('command-category').value,
+                            options: [], // Опции нужно добавлять отдельно
+                            examples: [], // Примеры нужно добавлять отдельно
+                            tags: [] // Теги нужно добавлять отдельно
+                        };
+                        
+                        window.commandAPI.commands.add(newCommand);
+                        alert('Команда успешно добавлена!');
+                        this.reset();
+                    } else {
+                        alert('API не инициализирован. Дождитесь полной загрузки страницы.');
+                    }
+                });
+            }
+            
+            // Загрузка внешних данных
+            const loadExternalBtn = document.getElementById('load-external');
+            if (loadExternalBtn) {
+                loadExternalBtn.addEventListener('click', function() {
+                    const url = document.getElementById('external-url').value;
+                    if (!url) {
+                        alert('Пожалуйста, введите URL');
+                        return;
+                    }
+                    
+                    if (window.commandAPI) {
+                        window.commandAPI.loadExternalData(url)
+                            .then(success => {
+                                if (success) {
+                                    alert('Данные успешно загружены!');
+                                } else {
+                                    alert('Ошибка при загрузке данных');
+                                }
+                            });
+                    } else {
+                        alert('API не инициализирован. Дождитесь полной загрузки страницы.');
+                    }
+                });
+            }
+        });
+        
+        // Функция для открытия панели администрирования (вызывается из консоли)
+        function showAdminPanel() {
+            const adminPanel = document.getElementById('admin-panel');
+            if (adminPanel) {
+                adminPanel.style.display = 'block';
+            }
+        }
+        
+        // Функция для скрытия панели администрирования
+        function hideAdminPanel() {
+            const adminPanel = document.getElementById('admin-panel');
+            if (adminPanel) {
+                adminPanel.style.display = 'none';
+            }
+        }
+
+        // Функция для настройки мобильного меню
+        function setupMobileMenu() {
+            // ...existing code...
+            
+            // Закрывать меню при клике на пункт меню (для мобильных устройств)
+            document.querySelectorAll('#nav-menu a, .right-nav a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 992) {
+                        document.body.classList.remove('menu-active');
+                        const icon = document.querySelector('.menu-toggle i');
+                        if (icon) {
+                            icon.className = 'fa-solid fa-bars';
+                        }
+                    }
+                });
+            });
+        }
+        
+        // Initialize FAQ functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add FAQ section to navItems if it doesn't exist
+            if (!navItems.some(item => item.id === 'faq-section')) {
+                navItems.push({ 
+                    id: "faq-section", 
+                    title: "Часто задаваемые вопросы", 
+                    icon: "fa-solid fa-question-circle", 
+                    category: "special" 
+                });
+            }
+            
+            // Set up FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    // Toggle active class on the question
+                    this.classList.toggle('active');
+                    
+                    // Get the answer element
+                    const answer = this.nextElementSibling;
+                    
+                    // Toggle show class on the answer
+                    if (answer.classList.contains('show')) {
+                        answer.classList.remove('show');
+                    } else {
+                        // Close all other answers first (optional - for accordion effect)
+                        document.querySelectorAll('.faq-answer.show').forEach(item => {
+                            if (item !== answer) item.classList.remove('show');
+                        });
+                        document.querySelectorAll('.faq-question.active').forEach(item => {
+                            if (item !== this) item.classList.remove('active');
+                        });
+                        
+                        answer.classList.add('show');
+                    }
+                });
+            });
+        });
+        
+        // Initialize filesystem admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching for filesystem admin
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    // Update active tab button
+                    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                        if (content.dataset.tab === tabId) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Mount point form submission
+            const mountForm = document.getElementById('add-mount-form');
+            if (mountForm) {
+                mountForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (window.commandAPI && window.commandAPI.filesystem) {
+                        const path = document.getElementById('mount-path').value;
+                        const device = document.getElementById('mount-device').value;
+                        const fstype = document.getElementById('mount-fstype').value;
+                        const options = document.getElementById('mount-options').value;
+                        const category = document.getElementById('mount-category').value;
+                        
+                        window.commandAPI.filesystem.mountPoints.add(path, device, fstype, options, category);
+                        alert('Точка монтирования успешно добавлена!');
+                        this.reset();
+                        
+                        // Refresh view if needed
+                        window.commandAPI.filesystem.refreshViews();
+                    } else {
+                        alert('API не инициализирован. Дождитесь полной загрузки страницы.');
+                    }
+                });
+            }
+            
+            // Disk form submission
+            const diskForm = document.getElementById('add-disk-form');
+            if (diskForm) {
+                diskForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (window.commandAPI && window.commandAPI.filesystem) {
+                        const name = document.getElementById('disk-name').value;
+                        const size = document.getElementById('disk-size').value;
+                        let partitions = [];
+                        
+                        try {
+                            const partitionsText = document.getElementById('disk-partitions').value;
+                            if (partitionsText) {
+                                partitions = JSON.parse(partitionsText);
+                            }
+                            
+                            window.commandAPI.filesystem.disks.add(name, size, partitions);
+                            alert('Диск успешно добавлен!');
+                            this.reset();
+                            
+                            // Refresh view if needed
+                            window.commandAPI.filesystem.refreshViews();
+                        } catch (error) {
+                            alert('Ошибка в формате JSON для разделов: ' + error.message);
+                        }
+                    } else {
+                        alert('API не инициализирован. Дождитесь полной загрузки страницы.');
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script src="data.js"></script>
+    <script src="commandReference.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
